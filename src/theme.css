@@ -1,0 +1,104 @@
+/* ─── FlowPOS Global Theme Variables ─────────────────────────────────────────
+   Add this to your index.css or App.css (import it at the top).
+   All pages/components should use these variables instead of hardcoded colors.
+──────────────────────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme="light"] {
+  /* ── AdminLayout vars (used by AdminLayout.jsx) ── */
+  --bg-color:         #f4f4f8;
+  --sidebar-bg:       #ffffff;
+  --card-bg:          #ffffff;
+  --border-color:     #e5e7eb;
+  --text-primary:     #111827;
+  --text-muted:       #6b7280;
+  --accent:           #6366f1;
+
+  /* ── Semantic vars ── */
+  --bg-primary:       #f4f4f8;
+  --bg-secondary:     #ffffff;
+  --bg-card:          #ffffff;
+  --bg-card-hover:    #f5f5fb;
+  --bg-subtle:        #f3f4f6;
+  --bg-input:         #ffffff;
+  --border-primary:   #e5e7eb;
+  --border-subtle:    #f0f0f5;
+  --border-focus:     #6366f1;
+  --text-secondary:   #374151;
+  --text-faint:       #9ca3af;
+  --accent-light:     rgba(99,102,241,.1);
+  --accent-border:    rgba(99,102,241,.25);
+
+  /* Status */
+  --success-bg:       rgba(16,185,129,.1);
+  --success-border:   rgba(16,185,129,.25);
+  --success-text:     #065f46;
+  --error-bg:         rgba(239,68,68,.08);
+  --error-border:     rgba(239,68,68,.2);
+  --error-text:       #dc2626;
+  --warning-bg:       rgba(245,158,11,.08);
+  --warning-border:   rgba(245,158,11,.2);
+  --warning-text:     #92400e;
+
+  /* Table */
+  --table-header-bg:  #f9fafb;
+  --table-row-hover:  #f5f5fb;
+  --table-border:     #e5e7eb;
+
+  /* Shadows */
+  --shadow-sm:        0 1px 3px rgba(0,0,0,.08);
+  --shadow-md:        0 4px 16px rgba(0,0,0,.08);
+}
+
+[data-theme="dark"] {
+  /* ── AdminLayout vars ── */
+  --bg-color:         #0a0a0f;
+  --sidebar-bg:       #0d0d1a;
+  --card-bg:          rgba(255,255,255,.04);
+  --border-color:     rgba(255,255,255,.08);
+  --text-primary:     #f9fafb;
+  --text-muted:       rgba(255,255,255,.4);
+  --accent:           #6366f1;
+
+  /* ── Semantic vars ── */
+  --bg-primary:       #0a0a0f;
+  --bg-secondary:     #0d0d1a;
+  --bg-card:          rgba(255,255,255,.03);
+  --bg-card-hover:    rgba(255,255,255,.05);
+  --bg-subtle:        rgba(255,255,255,.04);
+  --bg-input:         rgba(255,255,255,.05);
+  --border-primary:   rgba(255,255,255,.08);
+  --border-subtle:    rgba(255,255,255,.05);
+  --border-focus:     #6366f1;
+  --text-secondary:   rgba(255,255,255,.8);
+  --text-faint:       rgba(255,255,255,.2);
+  --accent-light:     rgba(99,102,241,.15);
+  --accent-border:    rgba(99,102,241,.3);
+
+  /* Status */
+  --success-bg:       rgba(16,185,129,.1);
+  --success-border:   rgba(16,185,129,.25);
+  --success-text:     #34d399;
+  --error-bg:         rgba(239,68,68,.1);
+  --error-border:     rgba(239,68,68,.25);
+  --error-text:       #f87171;
+  --warning-bg:       rgba(245,158,11,.1);
+  --warning-border:   rgba(245,158,11,.25);
+  --warning-text:     #fbbf24;
+
+  /* Table */
+  --table-header-bg:  rgba(255,255,255,.03);
+  --table-row-hover:  rgba(255,255,255,.025);
+  --table-border:     rgba(255,255,255,.06);
+
+  /* Shadows */
+  --shadow-sm:        0 1px 3px rgba(0,0,0,.4);
+  --shadow-md:        0 4px 16px rgba(0,0,0,.4);
+}
+
+/* ─── Base styles ─────────────────────────────────────────────────────────── */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  transition: background-color .2s, color .2s;
+}

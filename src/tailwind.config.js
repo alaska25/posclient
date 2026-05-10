@@ -1,0 +1,31 @@
+module.exports = {
+  darkMode: 'class',
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
+  safelist: [
+    'w-[60px]',
+    'w-[220px]',
+    'transition-[width]',
+    'space-y-0.5',
+    'dark:bg-white/8',
+    'hover:bg-white/8',
+    'bg-white/8',
+    'border-white/[0.06]',
+    'dark:border-white/[0.06]',
+    'dark:bg-white/5',
+    'hover:bg-white/5',
+    'dark:hover:bg-white/5',
+    'dark:text-indigo-400',
+    'dark:bg-indigo-500/20',
+    'dark:text-gray-400',
+    'dark:text-gray-500',
+    'dark:hover:text-gray-300',
+    'dark:text-white',
+    'dark:bg-[#0f0f11]',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
