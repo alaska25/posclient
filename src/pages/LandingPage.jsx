@@ -152,7 +152,7 @@ const STATS = [
 ];
 
 // ── SINGLE CORRECT API URL ────────────────────────────────────────────────────
-const CHAT_API_URL = 'https://pos-server-b4li.onrender.com/api/chat/support';
+const CHAT_API_URL = `${process.env.REACT_APP_API_URL}/api/chat/support`;
 
 // ── LANG TOGGLE ───────────────────────────────────────────────────────────────
 const LANG_CYCLE  = { en: 'fil', fil: 'ja', ja: 'en' };
