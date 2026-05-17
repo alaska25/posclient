@@ -2,22 +2,33 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Settings from './pages/Settings';
-import { AuthProvider, ProtectedRoute, AdminRoute, SuperAdminRoute, StaffRoute } from './context/AuthContext';
+
+// ── Auth & route guards — ALL from AuthContext ────────────────────────────────
+import {
+  AuthProvider,
+  ProtectedRoute,
+  AdminRoute,
+  SuperAdminRoute,
+  StaffRoute,
+  CustomerRoute,        // ✅ now lives in AuthContext, not CustomerLayout
+} from './context/AuthContext';
+
 import { ThemeProvider }    from './context/ThemeContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 import { UserProvider }     from './UserContext';
-import { CustomerRoute } from './components/layout/CustomerLayout';
-import CustomerLayout    from './components/layout/CustomerLayout';
-import PortalDashboard  from './pages/portal/PortalDashboard';
-import PortalJobs       from './pages/portal/PortalJobs';
-import PortalInvoices   from './pages/portal/PortalInvoices';
-import PortalProfile    from './pages/portal/PortalProfile';
 
-// Layouts
-import Layout      from './components/layout/Layout';
-import AdminLayout from './components/layout/AdminLayout';
+// ── Layouts ───────────────────────────────────────────────────────────────────
+import Layout         from './components/layout/Layout';
+import AdminLayout    from './components/layout/AdminLayout';
+import CustomerLayout from './components/layout/CustomerLayout';  // layout only
 
-// Public pages
+// ── Customer portal pages ─────────────────────────────────────────────────────
+import PortalDashboard from './pages/portal/PortalDashboard';
+import PortalJobs      from './pages/portal/PortalJobs';
+import PortalInvoices  from './pages/portal/PortalInvoices';
+import PortalProfile   from './pages/portal/PortalProfile';
+
+// ── Public pages ──────────────────────────────────────────────────────────────
 import LandingPage    from './pages/LandingPage';
 import Login          from './pages/Login';
 import Register       from './pages/Register';
@@ -25,7 +36,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword  from './pages/ResetPassword';
 import Unauthorized   from './pages/Unauthorized';
 
-// Staff pages
+// ── Staff pages ───────────────────────────────────────────────────────────────
 import Dashboard      from './pages/Dashboard';
 import Customers      from './pages/Customers';
 import CustomerDetail from './pages/CustomerDetail';
@@ -39,7 +50,7 @@ import Reports        from './pages/Reports';
 import Users          from './pages/Users';
 import AiChat         from './pages/AiChat';
 
-// Admin pages
+// ── Admin pages ───────────────────────────────────────────────────────────────
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 
@@ -66,7 +77,7 @@ export default function App() {
                 <ScrollToTop />
                 <Routes>
 
-                  {/* ── Public ── */}
+                  {/* ── Public ─────────────────────────────────────────── */}
                   <Route path="/"                           element={<LandingPage />} />
                   <Route path="/login"                      element={<Login />} />
                   <Route path="/register"                   element={<Register />} />
@@ -74,7 +85,7 @@ export default function App() {
                   <Route path="/password-reset/:resetToken" element={<ResetPassword />} />
                   <Route path="/unauthorized"               element={<Unauthorized />} />
 
-                  {/* ── Superadmin ── */}
+                  {/* ── Superadmin ──────────────────────────────────────── */}
                   <Route element={<SuperAdminRoute />}>
                     <Route path="/superadmin" element={<AdminLayout />}>
                       <Route index        element={<AdminDashboard />} />
@@ -82,7 +93,7 @@ export default function App() {
                     </Route>
                   </Route>
 
-                  {/* ── Admin (standalone AdminLayout) ── */}
+                  {/* ── Admin ───────────────────────────────────────────── */}
                   <Route element={<AdminRoute />}>
                     <Route path="/admin" element={<AdminLayout />}>
                       <Route index        element={<AdminDashboard />} />
@@ -90,18 +101,18 @@ export default function App() {
                     </Route>
                   </Route>
 
-                  {/* ── Customer Portal ── */}
+                  {/* ── Customer Portal ─────────────────────────────────── */}
                   <Route element={<CustomerRoute />}>
                     <Route path="/app/portal" element={<CustomerLayout />}>
-                      <Route index                  element={<Navigate to="/app/portal/dashboard" replace />} />
-                      <Route path="dashboard"       element={<PortalDashboard />} />
-                      <Route path="jobs"            element={<PortalJobs />} />
-                      <Route path="invoices"        element={<PortalInvoices />} />
-                      <Route path="profile"         element={<PortalProfile />} />
+                      <Route index            element={<Navigate to="/app/portal/dashboard" replace />} />
+                      <Route path="dashboard" element={<PortalDashboard />} />
+                      <Route path="jobs"      element={<PortalJobs />} />
+                      <Route path="invoices"  element={<PortalInvoices />} />
+                      <Route path="profile"   element={<PortalProfile />} />
                     </Route>
                   </Route>
-                  
-                  {/* ── Staff app ── */}
+
+                  {/* ── Staff app ───────────────────────────────────────── */}
                   <Route element={<StaffRoute />}>
                     <Route path="/app" element={<Layout />}>
                       <Route index                element={<Navigate to="/app/dashboard" replace />} />
@@ -117,18 +128,17 @@ export default function App() {
                       <Route path="reports"       element={<Reports />} />
                       <Route path="ai"            element={<AiChat />} />
                       <Route path="users"         element={<Users />} />
-                      <Route path="settings"      element={<Settings />} /> {/* ✅ relative, was /app/settings */}
+                      <Route path="settings"      element={<Settings />} />
 
-                      {/* ── Admin panel inside /app (keeps Layout sidebar) ── */}
+                      {/* Admin panel inside /app */}
                       <Route element={<AdminRoute />}>
                         <Route path="admin"       element={<AdminDashboard />} />
                         <Route path="admin/users" element={<UserManagement />} />
                       </Route>
-
                     </Route>
                   </Route>
 
-                  {/* ── Fallback ── */}
+                  {/* ── Fallback ────────────────────────────────────────── */}
                   <Route path="*" element={<Navigate to="/" replace />} />
 
                 </Routes>
