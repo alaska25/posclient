@@ -151,6 +151,9 @@ const STATS = [
   { value: '24/7',   label: L('Support','Suporta','サポート') },
 ];
 
+// ── SINGLE CORRECT API URL ────────────────────────────────────────────────────
+const CHAT_API_URL = '/.netlify/functions/chat';
+
 // ── LANG TOGGLE ───────────────────────────────────────────────────────────────
 const LANG_CYCLE  = { en: 'fil', fil: 'ja', ja: 'en' };
 const LANG_FLAGS  = { en: '🇬🇧', fil: '🇵🇭', ja: '🇯🇵' };
@@ -196,13 +199,11 @@ function ThemeToggle({ theme, setTheme, isLight }) {
 }
 
 // ── AI CHAT WIDGET ────────────────────────────────────────────────────────────
-const CHAT_API_URL = 'http://localhost:5000/api/chat/support';
-
 function AIChatWidget({ th, isLight }) {
-  const [open, setOpen]       = useState(false);
+  const [open, setOpen]         = useState(false);
   const [messages, setMessages] = useState([{ role:'assistant', content:"Hi! 👋 I'm the FlowPOS assistant. How can I help you today?" }]);
-  const [input, setInput]     = useState('');
-  const [loading, setLoading] = useState(false);
+  const [input, setInput]       = useState('');
+  const [loading, setLoading]   = useState(false);
   const endRef   = useRef(null);
   const inputRef = useRef(null);
 
@@ -219,8 +220,12 @@ function AIChatWidget({ th, isLight }) {
     const next = [...messages, { role:'user', content:text }];
     setMessages(next); setInput(''); setLoading(true);
     try {
-      const res  = await fetch(CHAT_API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ messages: next.map(m=>({ role:m.role, content:m.content })) }) });
-      if (!res.ok) throw new Error();
+      const res = await fetch(CHAT_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: next.map(m => ({ role: m.role, content: m.content })) }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setMessages(p => [...p, { role:'assistant', content: data.reply || 'Sorry, no response. Try again.' }]);
     } catch {
@@ -334,8 +339,8 @@ function SectionHeader({ label, title1, title2, sub, center = true }) {
 // ── MAIN COMPONENT ────────────────────────────────────────────────────────────
 export default function LandingPage() {
   const navigate = useNavigate();
-  const [lang, setLang]       = useState('en');
-  const [theme, setTheme]     = useState('dark');
+  const [lang, setLang]         = useState('en');
+  const [theme, setTheme]       = useState('dark');
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [formData, setFormData] = useState({ name:'', email:'', phone:'', service:'', message:'' });
@@ -345,29 +350,29 @@ export default function LandingPage() {
 
   // ── theme tokens ────────────────────────────────────────────────────────────
   const th = {
-    bg:        isLight ? '#f5f7fc' : '#080b14',
-    color:     isLight ? '#111827' : '#e8edf5',
-    navBg:     isLight ? 'rgba(245,247,252,0.95)' : 'rgba(8,11,20,0.93)',
-    navBorder: isLight ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.06)',
-    cardBg:    isLight ? '#ffffff' : 'rgba(255,255,255,0.035)',
-    cardBorder:isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.07)',
-    secBg:     isLight ? '#eef1f8' : 'rgba(255,255,255,0.02)',
-    secBorder: isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)',
-    sub:       isLight ? 'rgba(17,24,39,0.55)' : 'rgba(232,237,245,0.55)',
-    body:      isLight ? 'rgba(17,24,39,0.7)'  : 'rgba(232,237,245,0.65)',
-    muted:     isLight ? 'rgba(17,24,39,0.38)' : 'rgba(232,237,245,0.35)',
-    tagBg:     isLight ? 'rgba(0,0,0,0.05)'    : 'rgba(255,255,255,0.06)',
-    tagBorder: isLight ? 'rgba(0,0,0,0.09)'    : 'rgba(255,255,255,0.1)',
-    inputBg:   isLight ? '#ffffff'              : 'rgba(255,255,255,0.05)',
-    inputBorder:isLight? 'rgba(0,0,0,0.14)'    : 'rgba(255,255,255,0.1)',
-    hlCard:    isLight
+    bg:         isLight ? '#f5f7fc' : '#080b14',
+    color:      isLight ? '#111827' : '#e8edf5',
+    navBg:      isLight ? 'rgba(245,247,252,0.95)' : 'rgba(8,11,20,0.93)',
+    navBorder:  isLight ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.06)',
+    cardBg:     isLight ? '#ffffff' : 'rgba(255,255,255,0.035)',
+    cardBorder: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.07)',
+    secBg:      isLight ? '#eef1f8' : 'rgba(255,255,255,0.02)',
+    secBorder:  isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)',
+    sub:        isLight ? 'rgba(17,24,39,0.55)' : 'rgba(232,237,245,0.55)',
+    body:       isLight ? 'rgba(17,24,39,0.7)'  : 'rgba(232,237,245,0.65)',
+    muted:      isLight ? 'rgba(17,24,39,0.38)' : 'rgba(232,237,245,0.35)',
+    tagBg:      isLight ? 'rgba(0,0,0,0.05)'    : 'rgba(255,255,255,0.06)',
+    tagBorder:  isLight ? 'rgba(0,0,0,0.09)'    : 'rgba(255,255,255,0.1)',
+    inputBg:    isLight ? '#ffffff'              : 'rgba(255,255,255,0.05)',
+    inputBorder:isLight ? 'rgba(0,0,0,0.14)'    : 'rgba(255,255,255,0.1)',
+    hlCard:     isLight
       ? 'linear-gradient(135deg,rgba(99,102,241,0.09),rgba(168,85,247,0.09))'
       : 'linear-gradient(135deg,rgba(99,102,241,0.14),rgba(168,85,247,0.14))',
-    statBg:   (i) => i===1
+    statBg:  (i) => i===1
       ? 'linear-gradient(135deg,rgba(99,102,241,0.14),rgba(168,85,247,0.14))'
       : (isLight ? '#ffffff' : 'rgba(255,255,255,0.035)'),
-    statBdr:  (i) => i===1 ? 'rgba(168,85,247,0.4)' : (isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.07)'),
-    menuBg:   isLight ? 'rgba(245,247,252,0.98)' : 'rgba(8,11,20,0.98)',
+    statBdr: (i) => i===1 ? 'rgba(168,85,247,0.4)' : (isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.07)'),
+    menuBg:  isLight ? 'rgba(245,247,252,0.98)' : 'rgba(8,11,20,0.98)',
   };
 
   useEffect(() => {
@@ -379,7 +384,6 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', fn);
   }, []);
 
-  // close menu on resize to desktop
   useEffect(() => {
     const fn = () => { if (window.innerWidth > 768) setMenuOpen(false); };
     window.addEventListener('resize', fn);
@@ -425,7 +429,6 @@ export default function LandingPage() {
           animation:shimmer 4s linear infinite;
         }
 
-        /* ── SECTION LABEL / TITLE / SUB ── */
         .sec-label{
           display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
           color:#a78bfa;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.22);
@@ -441,11 +444,9 @@ export default function LandingPage() {
           max-width:480px;
         }
 
-        /* ── NAV ── */
         .nav-link{font-size:14px;font-weight:500;color:${isLight?'rgba(17,24,39,0.6)':'rgba(232,237,245,0.65)'};cursor:pointer;transition:color 0.2s;letter-spacing:0.2px}
         .nav-link:hover{color:${isLight?'#111827':'#fff'}}
 
-        /* ── BUTTONS ── */
         .btn-p{
           display:inline-flex;align-items:center;justify-content:center;gap:7px;
           background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;border:none;border-radius:100px;
@@ -463,7 +464,6 @@ export default function LandingPage() {
         }
         .btn-o:hover{border-color:${isLight?'rgba(0,0,0,0.35)':'rgba(255,255,255,0.45)'};background:${isLight?'rgba(0,0,0,0.04)':'rgba(255,255,255,0.05)'}}
 
-        /* ── CARDS ── */
         .card{
           background:${th.cardBg};border:1px solid ${th.cardBorder};border-radius:18px;
           transition:all 0.28s ease;position:relative;overflow:hidden;
@@ -483,7 +483,6 @@ export default function LandingPage() {
         .t-card{background:${th.cardBg};border:1px solid ${th.cardBorder};border-radius:18px;transition:all 0.28s}
         .t-card:hover{border-color:rgba(99,102,241,0.3);transform:translateY(-4px);box-shadow:${isLight?'0 10px 32px rgba(99,102,241,0.08)':'none'}}
 
-        /* ── INPUT ── */
         .inp{
           width:100%;background:${th.inputBg};border:1.5px solid ${th.inputBorder};
           border-radius:11px;padding:13px 16px;font-size:14px;color:${th.color};
@@ -493,7 +492,6 @@ export default function LandingPage() {
         .inp::placeholder{color:${th.muted}}
         select.inp option{background:${isLight?'#fff':'#0f1120'};color:${th.color}}
 
-        /* ── MOBILE MENU ── */
         .mob-menu{
           display:none;position:fixed;top:68px;left:0;right:0;z-index:99;
           background:${th.menuBg};backdrop-filter:blur(20px);
@@ -510,26 +508,17 @@ export default function LandingPage() {
         .mob-link:hover{color:${isLight?'#111827':'#fff'};background:${isLight?'rgba(0,0,0,0.03)':'rgba(255,255,255,0.03)'};padding-left:30px}
         .mob-link:last-of-type{border-bottom:none}
 
-        /* ── LAYOUT HELPERS ── */
         .wrap{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
         .sec{padding:clamp(64px,8vw,108px) clamp(16px,4vw,40px)}
-
-        /* ── ORB ── */
         .orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;opacity:${isLight?'0.09':'0.17'}}
 
-        /* ── RESPONSIVE GRIDS ── */
         .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
         .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
         .g2-about{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
         .g2-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 
-        @media(max-width:1024px){
-          .g3{grid-template-columns:repeat(2,1fr)}
-        }
-        @media(max-width:900px){
-          .g2-about{grid-template-columns:1fr;gap:40px}
-          .g4{grid-template-columns:repeat(2,1fr)}
-        }
+        @media(max-width:1024px){.g3{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:900px){.g2-about{grid-template-columns:1fr;gap:40px}.g4{grid-template-columns:repeat(2,1fr)}}
         @media(max-width:768px){
           .g3{grid-template-columns:repeat(2,1fr);gap:14px}
           .g4{grid-template-columns:repeat(2,1fr)}
@@ -545,9 +534,7 @@ export default function LandingPage() {
           .sec-title{font-size:clamp(22px,6vw,32px)}
           .btn-p,.btn-o{font-size:13px;padding:11px 20px}
         }
-        @media(max-width:400px){
-          .g4{grid-template-columns:repeat(2,1fr)}
-        }
+        @media(max-width:400px){.g4{grid-template-columns:repeat(2,1fr)}}
         .show-m{display:none}
       `}</style>
 
@@ -573,28 +560,21 @@ export default function LandingPage() {
         borderBottom: scrolled ? `1px solid ${th.navBorder}` : 'none',
         transition:'all 0.3s',
       }}>
-        {/* Logo */}
         <div style={{ display:'flex',alignItems:'center',gap:9,flexShrink:0 }}>
           <div style={{ width:34,height:34,borderRadius:9,background:'linear-gradient(135deg,#6366f1,#a855f7)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:15,fontWeight:800 }}>⚡</div>
           <span style={{ fontSize:19,fontWeight:700,fontFamily:"'Playfair Display',serif",letterSpacing:'-0.4px',color:th.color }}>
             Flow<span style={{ color:'#a855f7' }}>POS</span>
           </span>
         </div>
-
-        {/* Desktop links */}
         <div className="hide-m" style={{ display:'flex',alignItems:'center',gap:32 }}>
           {t.navLinks.map((l,i)=><span key={l} className="nav-link" onClick={()=>go(NAV_IDS[i])}>{l}</span>)}
         </div>
-
-        {/* Desktop actions */}
         <div className="hide-m" style={{ display:'flex',alignItems:'center',gap:8 }}>
           <ThemeToggle theme={theme} setTheme={setTheme} isLight={isLight}/>
           <LangToggle lang={lang} setLang={setLang} isLight={isLight}/>
           <button className="btn-o" onClick={()=>navigate('/login')} style={{ padding:'9px 20px',fontSize:13 }}>{t.navLogin}</button>
           <button className="btn-p" onClick={()=>go('contact')} style={{ padding:'9px 20px',fontSize:13 }}>{t.navBook}</button>
         </div>
-
-        {/* Hamburger */}
         <button onClick={()=>setMenuOpen(!menuOpen)} className="show-m"
           style={{ background:'none',border:`1.5px solid ${isLight?'rgba(0,0,0,0.14)':'rgba(255,255,255,0.15)'}`,color:th.color,fontSize:18,cursor:'pointer',width:38,height:38,borderRadius:8,alignItems:'center',justifyContent:'center',transition:'all 0.2s' }}>
           {menuOpen?'✕':'☰'}
@@ -605,8 +585,6 @@ export default function LandingPage() {
       <section id="hero" style={{ minHeight:'100vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden',padding:'clamp(100px,14vw,140px) clamp(16px,4vw,40px) clamp(48px,6vw,80px)' }}>
         <div className="orb" style={{ width:580,height:580,background:'#6366f1',top:-80,right:-80 }}/>
         <div className="orb" style={{ width:380,height:380,background:'#a855f7',bottom:-40,left:-80 }}/>
-
-        {/* Floating icons — desktop only */}
         <div className="hide-m" style={{ position:'absolute',top:'18%',right:'7%',animation:'float 6s ease-in-out infinite',opacity:0.55 }}>
           <div style={{ width:72,height:72,borderRadius:18,background:'linear-gradient(135deg,#6366f1,#a855f7)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:32 }}>🔧</div>
         </div>
@@ -616,25 +594,18 @@ export default function LandingPage() {
         <div className="hide-m" style={{ position:'absolute',top:'32%',right:'28%',animation:'float 7s ease-in-out infinite 0.9s',opacity:0.38 }}>
           <div style={{ width:42,height:42,borderRadius:10,background:isLight?'rgba(168,85,247,0.1)':'rgba(168,85,247,0.18)',border:'1px solid rgba(168,85,247,0.35)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:19 }}>❄️</div>
         </div>
-
         <div style={{ maxWidth:680,position:'relative',zIndex:2,width:'100%' }}>
           <div className="fu sec-label">{t.heroLabel}</div>
-
           <h1 className="fu d1" style={{ fontFamily:"'Playfair Display',serif",fontSize:'clamp(34px,7vw,86px)',fontWeight:900,lineHeight:1.04,letterSpacing:'-2px',margin:'0 0 20px',color:th.color }}>
             {t.heroTitle1}<br/><span className="grad-text">{t.heroTitle2}</span>
           </h1>
-
           <p className="fu d2" style={{ fontSize:'clamp(14px,2.5vw,17px)',lineHeight:1.75,color:th.body,maxWidth:500,marginBottom:32 }}>
             {t.heroSub}
           </p>
-
-          {/* CTAs */}
           <div className="fu d3" style={{ display:'flex',gap:12,flexWrap:'wrap',marginBottom:48 }}>
             <button className="btn-p" onClick={()=>go('contact')} style={{ fontSize:'clamp(13px,2vw,15px)',padding:'13px 28px' }}>{t.heroCta1}</button>
             <button className="btn-o" onClick={()=>go('services')} style={{ fontSize:'clamp(13px,2vw,15px)',padding:'13px 28px' }}>{t.heroCta2}</button>
           </div>
-
-          {/* Stats row */}
           <div className="fu d4" style={{ display:'flex',gap:'clamp(20px,4vw,40px)',flexWrap:'wrap',paddingTop:32,borderTop:`1px solid ${isLight?'rgba(0,0,0,0.07)':'rgba(255,255,255,0.07)'}` }}>
             {STATS.map(s=>(
               <div key={s.value}>
@@ -750,7 +721,6 @@ export default function LandingPage() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} style={{ background:th.cardBg,border:`1px solid ${th.cardBorder}`,borderRadius:22,padding:'clamp(24px,5vw,48px)',display:'flex',flexDirection:'column',gap:18 }}>
-            {/* Row 1 */}
             <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16 }}>
               <div>
                 <label style={{ fontSize:12,color:th.sub,marginBottom:7,display:'block',fontWeight:500 }}>{t.formName} *</label>
@@ -761,7 +731,6 @@ export default function LandingPage() {
                 <input className="inp" type="email" required placeholder={t.formEmailPh} value={formData.email} onChange={e=>setFormData({...formData,email:e.target.value})}/>
               </div>
             </div>
-            {/* Row 2 */}
             <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16 }}>
               <div>
                 <label style={{ fontSize:12,color:th.sub,marginBottom:7,display:'block',fontWeight:500 }}>{t.formPhone} *</label>
@@ -775,7 +744,6 @@ export default function LandingPage() {
                 </select>
               </div>
             </div>
-            {/* Message */}
             <div>
               <label style={{ fontSize:12,color:th.sub,marginBottom:7,display:'block',fontWeight:500 }}>{t.formMessage}</label>
               <textarea className="inp" rows={4} placeholder={t.formMessagePh} style={{ resize:'vertical',minHeight:100 }} value={formData.message} onChange={e=>setFormData({...formData,message:e.target.value})}/>
@@ -791,13 +759,10 @@ export default function LandingPage() {
       {/* ── FOOTER ──────────────────────────────────────────────────────── */}
       <footer style={{ borderTop:`1px solid ${th.secBorder}`,padding:'clamp(22px,4vw,36px) clamp(16px,4vw,40px)' }}>
         <div style={{ maxWidth:1200,margin:'0 auto',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:14,rowGap:16 }}>
-          {/* Logo */}
           <div style={{ display:'flex',alignItems:'center',gap:9 }}>
             <div style={{ width:28,height:28,borderRadius:7,background:'linear-gradient(135deg,#6366f1,#a855f7)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13 }}>⚡</div>
             <span style={{ fontFamily:"'Playfair Display',serif",fontSize:15,fontWeight:700,color:th.color }}>Flow<span style={{ color:'#a855f7' }}>POS</span></span>
           </div>
-
-          {/* Copyright + credit */}
           <div style={{ display:'flex',flexDirection:'column',alignItems:'center',gap:4,textAlign:'center' }}>
             <p style={{ fontSize:12,color:th.muted }}>{t.footerRights}</p>
             <p style={{ fontSize:11,color:th.muted }}>
@@ -809,8 +774,6 @@ export default function LandingPage() {
               >Arman Villegas</a>
             </p>
           </div>
-
-          {/* Footer links */}
           <div style={{ display:'flex',gap:20,flexWrap:'wrap' }}>
             {t.footerLinks.map((l,i)=>(
               <span key={l} className="nav-link" style={{ fontSize:12 }} onClick={()=>go(NAV_IDS[i])}>{l}</span>
